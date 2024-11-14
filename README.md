@@ -86,3 +86,84 @@ Django version 5.1, using settings 'mysite.settings'
 Starting development server at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
 ```
+## Creating the Polls app
+
+To create your app, make sure you’re in the same directory as manage.py and type this command:
+
+```console
+...\> py manage.py startapp polls
+```
+
+That’ll create a directory polls, which is laid out like this:
+
+```console
+polls/
+    __init__.py
+    admin.py
+    apps.py
+    migrations/
+        __init__.py
+    models.py
+    tests.py
+    views.py
+```
+
+## Write your first view
+
+Let’s write the first view. Open the file polls/views.py and put the following Python code in it:
+
+```python
+#polls/views.py
+from django.http import HttpResponse
+
+
+def index(request):
+    return HttpResponse("Hello, world. You're at the polls index.")
+```
+
+To define a URLconf for the polls app, create a file polls/urls.py with the following content:
+
+```python
+#polls/urls.py
+from django.urls import path
+
+from . import views
+
+urlpatterns = [
+    path("", views.index, name="index"),
+]
+```
+
+Your app directory should now look like:
+
+```console
+polls/
+    __init__.py
+    admin.py
+    apps.py
+    migrations/
+        __init__.py
+    models.py
+    tests.py
+    urls.py
+    views.py
+```
+
+The next step is to configure the global URLconf in the **mysite** project to include the URLconf defined in polls.urls. To do this, add an import for **django.urls.include** in **mysite/urls.py** and insert an **include()** in the **urlpatterns** list, so you have:
+
+```python
+#mysites/urls.py
+from django.contrib import admin
+from django.urls import include, path
+
+urlpatterns = [
+    path("polls/", include("polls.urls")),
+    path("admin/", admin.site.urls),
+]
+```
+
+You have now wired an index view into the URLconf. Verify it’s working with the following command:
+
+```console
+...\> py manage.py runserver
+```
